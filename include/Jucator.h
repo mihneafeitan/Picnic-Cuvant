@@ -15,7 +15,7 @@ private:
 
 public:
 
-    Jucator(const char* numeJucator = "Necunoscut");
+    explicit Jucator(const char* numeJucator = "Necunoscut");
     ~Jucator();
     Jucator(const Jucator& altul);
     Jucator& operator=(const Jucator& altul);

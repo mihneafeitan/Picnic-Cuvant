@@ -99,7 +99,7 @@ int Jucator::ghicesteCuvant(const std::string& cuvant, const Nivel& nivel) {
 }
 
 bool Jucator::aTerminatNivelul(const Nivel& n) const {
-    return cuvinteGhiciteNivelCurent.size() == n.getNumarSolutii();
+    return cuvinteGhiciteNivelCurent.size() == static_cast<size_t>(n.getNumarSolutii());
 }
 
 std::ostream& operator<<(std::ostream& os, const Jucator& j) {

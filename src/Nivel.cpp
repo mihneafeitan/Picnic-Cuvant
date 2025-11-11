@@ -24,10 +24,6 @@ const std::vector<std::string>& Nivel::getNivelSolutii() const {
     return solutii.getToateSolutiile();
 }
 
-const Litere& Nivel::getLitere() const {
-    return litereDisponibile;
-}
-
 std::ostream& operator<<(std::ostream& os, const Nivel& n) {
     os << "\nNivelul " << n.nrNivel << "\n";
     os << "Litere Disponibile: " << n.litereDisponibile << "\n";

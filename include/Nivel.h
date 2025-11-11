@@ -19,7 +19,6 @@ public:
     int getNrNivel() const;
 
     const std::vector<std::string>& getNivelSolutii() const;
-    const Litere& getLitere() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Nivel& n);
 };

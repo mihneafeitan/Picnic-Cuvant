@@ -23,6 +23,6 @@ private:
     void afiseazaProgresNivelCurent() const;
 
 public:
-    Joc(const std::string& fisierNivele);
+    explicit Joc(const std::string& fisierNivele);
     void ruleaza(); // Functia principala a jocului
 };

@@ -144,7 +144,7 @@ void Joc::ruleaza() {
 void Joc::ruleazaSesiuneDeJoc() {
     bool aIesitUtilizatorul = false;
 
-    while (jucator.getNivelCurent() <= toateNivelele.size()) {
+    while (jucator.getNivelCurent() <= static_cast<int>(toateNivelele.size())) {
 
         aIesitUtilizatorul = joacaUnNivel();
 
@@ -167,7 +167,7 @@ void Joc::ruleazaSesiuneDeJoc() {
 }
 
 bool Joc::joacaUnNivel() {
-    Nivel& nivelActual = toateNivelele.at(jucator.getNivelCurent() - 1);
+    const Nivel& nivelActual = toateNivelele.at(jucator.getNivelCurent() - 1);
 
     std::cout << nivelActual; // Afiseaza "Nivelul X", "Litere: ..."
 
