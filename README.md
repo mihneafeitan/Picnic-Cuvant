@@ -1,4 +1,4 @@
-#Picnic Cuvant
+# Picnic Cuvant
 
 Joc simplu de gandire, in care utilizatorul trebuie sa formeze cuvinte in limba romana, folosind literele disponibile la fiecare nivel.
 
