@@ -1,4 +1,6 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+Picnic Cuvant
+
+Joc simplu de gandire, in care utilizatorul trebuie sa formeze cuvinte in limba romana, folosind literele disponibile la fiecare nivel.
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
