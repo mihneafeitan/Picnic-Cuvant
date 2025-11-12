@@ -63,6 +63,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Litere.cpp
         src/Nivel.cpp
         src/Solutii.cpp
+        src/Statistici.cpp
 
 )
 add_executable(creator
