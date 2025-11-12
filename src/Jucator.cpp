@@ -56,7 +56,7 @@ const std::set<std::string>& Jucator::getCuvinteGhicite() const {
 }
 
 bool Jucator::salveazaProgres() const {
-    std::string numeFisier = getNume() + ".save";
+    std::string numeFisier = "saves/" + getNume() + ".save";
     std::ofstream fisierOut(numeFisier);
     if (!fisierOut) {
         return false;
@@ -67,7 +67,7 @@ bool Jucator::salveazaProgres() const {
 }
 
 bool Jucator::incarcaProgres() {
-    std::string numeFisier = getNume() + ".save";
+    std::string numeFisier = "saves/" + getNume() + ".save";
     std::ifstream fisierIn(numeFisier);
     if (!fisierIn) {
         return false; 

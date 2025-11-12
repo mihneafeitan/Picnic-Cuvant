@@ -1,6 +1,7 @@
 #pragma once
 #include "Jucator.h"
 #include "Nivel.h"
+#include "Statistici.h"
 #include <vector>
 #include <string>
 
@@ -9,7 +10,7 @@ private:
     std::vector<Nivel> toateNivelele;
     Jucator jucator;
     bool jucatorAreProgres;
-
+    Statistici statistici;
     // Functii helper private
     void incarcaNivele(const std::string& numeFisier);
     void afiseazaMeniu() const;

@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <cctype>
+#include <filesystem>
 
 // Cheia de decriptare
 constexpr char CHEIE_SECRETA_JOC = 'Q';
@@ -74,7 +75,9 @@ void Joc::afiseazaMeniu() const {
         std::cout << "1. Incepe Joc\n";
         std::cout << "2. Continua Joc (Optiune Indisponibila - jucator nou)\n";
     }
-    std::cout << "3. Exit\n";
+    std::cout << "3. Afiseaza Statistici\n";
+    std::cout << "4. Exit\n";
+
     std::cout << "Alegerea ta: ";
 }
 
@@ -99,6 +102,8 @@ void Joc::afiseazaProgresNivelCurent() const {
 }
 
 void Joc::ruleaza() {
+    std::filesystem::create_directory("saves");
+    std::filesystem::create_directory("stats");
     std::cout << "Bun venit la Picnic Cuvant!\n";
     std::cout << "Introdu numele jucatorului: ";
     std::string nume;
@@ -106,9 +111,10 @@ void Joc::ruleaza() {
 
     jucator.seteazaNume(nume.c_str());
     jucatorAreProgres = jucator.incarcaProgres();
+    statistici.incarca(jucator.getNume());
 
     int alegere = 0;
-    while (alegere != 3) {
+    while (alegere != 4) {
         afiseazaMeniu();
         std::cin >> alegere;
 
@@ -119,22 +125,29 @@ void Joc::ruleaza() {
                 } else {
                     std::cout << "Incepem un joc nou...\n";
                     jucator.reseteazaJoc();
+                    statistici.reseteaza();
                     jucator.salveazaProgres();
                     jucatorAreProgres = true;
-                    ruleazaSesiuneDeJoc(); // Functia noua
+                    ruleazaSesiuneDeJoc();
                 }
                 break;
             case 2:
                 if (jucatorAreProgres) {
                     std::cout << "Continuam jocul...\n";
-                    ruleazaSesiuneDeJoc(); // Functia noua
+                    ruleazaSesiuneDeJoc();
                 } else {
                     std::cout << "Optiune indisponibila.\n";
                 }
                 break;
+
             case 3:
+                std::cout << "\n--- Statistici pentru " << jucator.getNume() << " ---\n";
+                std::cout << statistici; // Apeleaza operatorul << supraincarcat
+                break;
+            case 4:
                 std::cout << "La revedere!\n";
                 break;
+
             default:
                 std::cout << "Alegere invalida.\n";
         }
@@ -150,17 +163,20 @@ void Joc::ruleazaSesiuneDeJoc() {
 
         if (aIesitUtilizatorul) {
             jucator.salveazaProgres();
+            statistici.salveaza();
             std::cout << "Progres salvat.\n";
             break; // Iesim din bucla si ne intoarcem la meniul principal
         }
 
         jucator.salveazaProgres(); // Salvam progresul la finalul fiecarui nivel
+        statistici.salveaza();
     }
 
     if (!aIesitUtilizatorul) {
         std::cout << "\n*** FELICITARI, " << jucator.getNume() << "! ***\n";
         std::cout << "Ai terminat toate nivelele disponibile!\n";
         jucator.reseteazaJoc();
+        statistici.reseteaza();
         jucator.salveazaProgres();
         jucatorAreProgres = false;
     }
@@ -187,9 +203,11 @@ bool Joc::joacaUnNivel() {
 
         if (rezultatGhicire == 1) { // Ghicit corect
             std::cout << "Corect!\n";
+            statistici.incrementeazaCuvantCorect();
             if (jucator.aTerminatNivelul(nivelActual)) {
                 afiseazaProgresNivelCurent();
                 std::cout << "\nFelicitari, ati completat nivelul " << nivelActual.getNrNivel() << ".\n";
+                statistici.incrementeazaNivelCompletat();
                 jucator.completeazaNivelul();
                 return false; // Semnalam ca nivelul e complet
             }
@@ -197,6 +215,7 @@ bool Joc::joacaUnNivel() {
             std::cout << "Cuvant deja gasit.\n";
         } else { // Nu e in lista
             std::cout << "Cuvantul nu se gaseste in lista.\n";
+            statistici.incrementeazaGreseala();
         }
     }
 }
