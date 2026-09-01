@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
         joc.afiseazaStareCurenta(std::cout);
         std::cout << "Scor nivel curent: " << joc.nivelCurent().getScorNivel() << "\n";
-        if (auto* dificil = dynamic_cast<NivelDificil*>(&const_cast<Nivel&>(joc.nivelCurent()))) {
+        if (const auto* dificil = dynamic_cast<NivelDificil*>(&const_cast<Nivel&>(joc.nivelCurent()))) {
             std::cout << "Nivel dificil esuat? " << dificil->aEsuat() << "\n";
         }
         interfata.ruleaza();
