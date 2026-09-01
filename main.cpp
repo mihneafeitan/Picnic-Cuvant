@@ -3,6 +3,7 @@
 
 #include <CLI11.hpp>
 
+#include "NivelDificil.h"
 #include "Litera.h"
 #include "Exceptii.h"
 #include "IncarcatorNivele.h"
@@ -48,6 +49,9 @@ int main(int argc, char** argv) {
 
         joc.afiseazaStareCurenta(std::cout);
         std::cout << "Scor nivel curent: " << joc.nivelCurent().getScorNivel() << "\n";
+        if (auto* dificil = dynamic_cast<NivelDificil*>(&const_cast<Nivel&>(joc.nivelCurent()))) {
+            std::cout << "Nivel dificil esuat? " << dificil->aEsuat() << "\n";
+        }
         interfata.ruleaza();
 
     } catch (const PicnicCuvantExceptie& eroare) {

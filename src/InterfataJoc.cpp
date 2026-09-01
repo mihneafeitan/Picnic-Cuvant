@@ -135,7 +135,7 @@ void InterfataJoc::deseneazaAntet() {
     fereastra.draw(textNivel);
 
     auto textScor = creazaText(font, joc.getJucator().obtineRezumat(), 18, sf::Color(150, 220, 150),
-                                {680.f, 20.f});
+                                {330.f, 20.f});
     fereastra.draw(textScor);
 }
 
