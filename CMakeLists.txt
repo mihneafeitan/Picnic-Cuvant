@@ -64,6 +64,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Exceptii.cpp
         src/Nivel.cpp
         src/NivelClasic.cpp
+	src/NivelCronometrat.cpp
+        src/NivelDificil.cpp
         src/Joc.cpp
         src/IncarcatorNivele.cpp
         src/InterfataJoc.cpp

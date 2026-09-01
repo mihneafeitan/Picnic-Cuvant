@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     std::string numeJucator = "Jucator";
     std::string folderDate = "data/nivele";
     std::string caleFont = "assets/DejaVuSans.ttf";
-    int numarNivele = 2;   // la Tema 1 exista doar 2 nivele demo (tip CLASIC)
+    int numarNivele = 7;   // la Tema 2 (inainte de NivelBonus) sunt 7 nivele  (nivel08 e BONUS)
 
     app.add_option("-n,--nume", numeJucator, "Numele jucatorului");
     app.add_option("-d,--date", folderDate, "Folderul cu fisierele JSON ale nivelelor");
@@ -35,6 +35,8 @@ int main(int argc, char** argv) {
         }
 
         InterfataJoc interfata(std::move(joc), caleFont);
+        // demonstratie explicita a functiilor publice ramase neapelate altundeva
+        // (cerinta: toate functiile membre publice trebuie apelate in main)
         std::cout << "Jucator: " << jucator.getNume() << ", scor initial: " << jucator.getScorTotal() << "\n";
         std::cout << "Total jucatori creati: " << Jucator::getNumarJucatoriCreati() << "\n";
         std::cout << "Total obiecte Nivel active: " << Nivel::getNumarNivele() << "\n";

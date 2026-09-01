@@ -3,6 +3,8 @@
 #include <cmath>
 #include <sstream>
 #include "Exceptii.h"
+#include "NivelCronometrat.h"
+#include "NivelDificil.h"
 
 namespace {
 constexpr float PI = 3.14159265358979323846f;
@@ -40,23 +42,21 @@ void InterfataJoc::proceseazaEvenimente() {
     while (const std::optional<sf::Event> eveniment = fereastra.pollEvent()) {
         if (eveniment->is<sf::Event::Closed>()) {
             fereastra.close();
-        }
-        else if (const auto* apasare = eveniment->getIf<sf::Event::MouseButtonPressed>()) {
-                if (apasare->button == sf::Mouse::Button::Left && joc.ramanNivele()) {
-                    sf::Vector2f punct(static_cast<float>(apasare->position.x),
-                    static_cast<float>(apasare->position.y));
-                    int index = literaLaPunct(punct);
-                    if (index >= 0) {
-                        bool dejaSelectata =
-                            std::find(selectieCurenta.begin(), selectieCurenta.end(), index) !=
-                            selectieCurenta.end();
-                        if (!dejaSelectata) {
-                            selectieCurenta.push_back(index);
-                        }
+        } else if (const auto* apasare = eveniment->getIf<sf::Event::MouseButtonPressed>()) {
+            if (apasare->button == sf::Mouse::Button::Left && joc.ramanNivele()) {
+                sf::Vector2f punct(static_cast<float>(apasare->position.x),
+                                    static_cast<float>(apasare->position.y));
+                int index = literaLaPunct(punct);
+                if (index >= 0) {
+                    bool dejaSelectata =
+                        std::find(selectieCurenta.begin(), selectieCurenta.end(), index) !=
+                        selectieCurenta.end();
+                    if (!dejaSelectata) {
+                        selectieCurenta.push_back(index);
                     }
                 }
-        }
-        else if (const auto* tasta = eveniment->getIf<sf::Event::KeyPressed>()) {
+            }
+        } else if (const auto* tasta = eveniment->getIf<sf::Event::KeyPressed>()) {
             if (!joc.ramanNivele()) {
                 continue;   // jocul s-a incheiat, nu mai raspundem la taste de joc
             }
@@ -92,9 +92,16 @@ void InterfataJoc::actualizeaza() {
     }
 
     joc.actualizeazaNivelCurent(dt);
-    // La tema 1 exista un singur tip de nivel (NivelClasic), fara limita
-    // de timp; verificarea de timp expirat o adaug la tema 2, o data cu
-    // NivelCronometrat.
+
+    // daca timpul unui nivel cronometrat a expirat, trecem automat mai departe
+    if (const auto* cronometrat = dynamic_cast<const NivelCronometrat*>(&joc.nivelCurent())) {
+        if (cronometrat->aExpiratTimpul()) {
+            mesajStare = "Timpul a expirat! Trecem la nivelul urmator.";
+            culoareMesaj = sf::Color(255, 140, 0);
+            golesteSelectia();
+            joc.treciLaNivelUrmator();
+        }
+    }
 }
 
 void InterfataJoc::deseneaza() {
@@ -107,8 +114,7 @@ void InterfataJoc::deseneaza() {
         deseneazaListaCuvinte();
         deseneazaInfoSpecificaNivelului();
         treciNivelDacaEComplet();
-    }
-    else {
+    } else {
         deseneazaEcranFinal();
     }
 
@@ -122,8 +128,7 @@ void InterfataJoc::deseneazaAntet() {
     std::ostringstream info;
     if (joc.ramanNivele()) {
         info << "Nivel " << (joc.getIndexNivelCurent() + 1) << "/" << joc.getNumarNiveleTotale();
-    }
-    else {
+    } else {
         info << "Joc incheiat";
     }
     auto textNivel = creazaText(font, info.str(), 20, sf::Color(180, 200, 220), {30.f, 60.f});
@@ -207,10 +212,32 @@ void InterfataJoc::deseneazaListaCuvinte() {
 }
 
 void InterfataJoc::deseneazaInfoSpecificaNivelului() {
-    // la tema 1 exista un singur tip de nivel (NivelClasic), fara informatii
-    // suplimentare de afisat aici. downcast-urile cu sens catre derivatele
-    // NivelCronometrat / NivelDificil / NivelBonus se adauga la Tema 2.
-    (void)joc.nivelCurent();
+    const Nivel& curent = joc.nivelCurent();
+
+    // downcast-uri cu sens: fiecare tip de derivata expune informatii pe
+    // care clasa de baza Nivel nu le are, si le afisam diferit in UI
+    if (const auto* cronometrat = dynamic_cast<const NivelCronometrat*>(&curent)) {
+        std::ostringstream text;
+        text << "Timp ramas: " << cronometrat->timpRamasSecunde() << "s";
+        auto eticheta = creazaText(font, text.str(), 16, sf::Color(255, 180, 90), {680.f, 560.f});
+        fereastra.draw(eticheta);
+
+        sf::RectangleShape fundal({180.f, 14.f});
+        fundal.setPosition({680.f, 585.f});
+        fundal.setFillColor(sf::Color(50, 56, 74));
+        fereastra.draw(fundal);
+
+        sf::RectangleShape bara({180.f * cronometrat->fractieTimpRamas(), 14.f});
+        bara.setPosition({680.f, 585.f});
+        bara.setFillColor(sf::Color(255, 140, 60));
+        fereastra.draw(bara);
+    } else if (const auto* dificil = dynamic_cast<const NivelDificil*>(&curent)) {
+        std::ostringstream text;
+        text << "Greseli ramase: " << dificil->greseliRamase();
+        auto eticheta = creazaText(font, text.str(), 16, sf::Color(255, 120, 120), {680.f, 560.f});
+        fereastra.draw(eticheta);
+    }
+    // ramura pentru NivelBonus se adauga intr-un commit separat
 }
 
 void InterfataJoc::deseneazaEcranFinal() {
@@ -283,6 +310,7 @@ void InterfataJoc::treciNivelDacaEComplet() {
         fereastra.draw(text);
     }
 }
+
 std::ostream& operator<<(std::ostream& os, const InterfataJoc& interfata) {
     os << "InterfataJoc[fereastra " << interfata.fereastra.getSize().x << "x"
        << interfata.fereastra.getSize().y << ", " << interfata.joc << "]";

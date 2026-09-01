@@ -3,6 +3,8 @@
 #include <sstream>
 #include "Exceptii.h"
 #include "NivelClasic.h"
+#include "NivelCronometrat.h"
+#include "NivelDificil.h"
 #include <json.hpp>   // biblioteca externa nlohmann/json (folosita pentru stocare/citire)
 
 namespace IncarcatorNivele {
@@ -49,11 +51,18 @@ std::unique_ptr<Nivel> incarcaUnNivel(const std::string& caleFisier) {
         std::vector<char> litere = extrageLitere(continut);
         std::vector<std::string> cuvinte = extrageCuvinte(continut);
 
-        // La stadiul Tema 1, exista un singur tip de nivel disponibil;
-        // celelalte tipuri (mostenire) sunt adaugate la Tema 2.
         if (tip == "CLASIC") {
             return std::make_unique<NivelClasic>(id, litere, cuvinte);
         }
+        if (tip == "CRONOMETRAT") {
+            int timpLimita = continut.at("timpLimitaSecunde").get<int>();
+            return std::make_unique<NivelCronometrat>(id, litere, cuvinte, timpLimita);
+        }
+        if (tip == "DIFICIL") {
+            int greseliMaxime = continut.at("greseliMaxime").get<int>();
+            return std::make_unique<NivelDificil>(id, litere, cuvinte, greseliMaxime);
+        }
+        // tipul BONUS (NivelBonus) se adauga intr-un commit separat
 
         throw ExceptieFisierDate(caleFisier, "tip de nivel necunoscut: " + tip);
     } catch (const nlohmann::json::out_of_range& eroare) {

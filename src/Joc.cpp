@@ -1,6 +1,8 @@
 #include "Joc.h"
 #include <utility>
 #include "Exceptii.h"
+#include "NivelCronometrat.h"
+#include "NivelDificil.h"
 
 Joc::Joc(Jucator jucatorInitial) : jucator(std::move(jucatorInitial)), indexNivelCurent(0) {}
 
@@ -83,8 +85,12 @@ void Joc::afiseazaStareCurenta(std::ostream& os) const {
 
     const Nivel* curent = nivele[static_cast<std::size_t>(indexNivelCurent)].get();
     os << *curent << '\n';
-    // downcast-uri catre derivate specifice (NivelCronometrat/NivelDificil)
-    // se adauga la Tema 2
+
+    if (const auto* cronometrat = dynamic_cast<const NivelCronometrat*>(curent)) {
+        os << "  (timp ramas exact: " << cronometrat->timpRamasSecunde() << " secunde)\n";
+    } else if (const auto* dificil = dynamic_cast<const NivelDificil*>(curent)) {
+        os << "  (mai ai voie la " << dificil->greseliRamase() << " greseli)\n";
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const Joc& joc) {

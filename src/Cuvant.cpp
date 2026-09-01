@@ -1,6 +1,5 @@
 #include "Cuvant.h"
 #include "Exceptii.h"
-#include <string>
 
 Cuvant::Cuvant(std::string textCuvant) : text(std::move(textCuvant)), gasit(false) {
     if (text.empty()) {

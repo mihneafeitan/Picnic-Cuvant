@@ -1,0 +1,7 @@
+{
+  "id": 3,
+  "tip": "CRONOMETRAT",
+  "timpLimitaSecunde": 90,
+  "litere": ["P", "O", "M", "A", "R"],
+  "cuvinte": ["POMAR", "POM", "MAR", "ROM", "AMOR"]
+}
