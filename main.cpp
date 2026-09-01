@@ -3,6 +3,7 @@
 
 #include "CLI11.hpp"
 
+#include "Litera.h"
 #include "Exceptii.h"
 #include "IncarcatorNivele.h"
 #include "InterfataJoc.h"
@@ -34,6 +35,17 @@ int main(int argc, char** argv) {
         }
 
         InterfataJoc interfata(std::move(joc), caleFont);
+        std::cout << "Jucator: " << jucator.getNume() << ", scor initial: " << jucator.getScorTotal() << "\n";
+        std::cout << "Total jucatori creati: " << Jucator::getNumarJucatoriCreati() << "\n";
+        std::cout << "Total obiecte Nivel active: " << Nivel::getNumarNivele() << "\n";
+
+        Litera literaDemo('A', 0);
+        literaDemo.selecteaza();
+        std::cout << "Litera demo selectata? " << literaDemo.esteSelectata() << ", pozitie: " << literaDemo.getPozitie() << "\n";
+        literaDemo.deselecteaza();
+
+        joc.afiseazaStareCurenta(std::cout);
+        std::cout << "Scor nivel curent: " << joc.nivelCurent().getScorNivel() << "\n";
         interfata.ruleaza();
 
     } catch (const PicnicCuvantExceptie& eroare) {

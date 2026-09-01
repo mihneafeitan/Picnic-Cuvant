@@ -81,7 +81,7 @@ void Joc::afiseazaStareCurenta(std::ostream& os) const {
         return;
     }
 
-    Nivel* curent = nivele[static_cast<std::size_t>(indexNivelCurent)].get();
+    const Nivel* curent = nivele[static_cast<std::size_t>(indexNivelCurent)].get();
     os << *curent << '\n';
     // downcast-uri catre derivate specifice (NivelCronometrat/NivelDificil)
     // se adauga la Tema 2

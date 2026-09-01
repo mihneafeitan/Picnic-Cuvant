@@ -1,5 +1,6 @@
 #include "Cuvant.h"
 #include "Exceptii.h"
+#include <string>
 
 Cuvant::Cuvant(std::string textCuvant) : text(std::move(textCuvant)), gasit(false) {
     if (text.empty()) {
@@ -26,6 +27,10 @@ const std::string& Cuvant::getText() const { return text; }
 int Cuvant::getScorImplicit() const { return scorImplicit; }
 
 std::ostream& operator<<(std::ostream& os, const Cuvant& cuvant) {
-    os << cuvant.text << (cuvant.gasit ? " [gasit]" : " [?????]");
+    if (cuvant.gasit) {
+        os << cuvant.text << " [gasit]";
+    } else {
+        os << std::string(cuvant.text.size(), '_') << " [?????]";
+    }
     return os;
 }
