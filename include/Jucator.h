@@ -1,39 +1,33 @@
-#pragma once
+#ifndef PICNIC_CUVANT_JUCATOR_H
+#define PICNIC_CUVANT_JUCATOR_H
+
+#include <iostream>
 #include <string>
-#include <set>
-#include <ostream>
+#include <vector>
 
-class Nivel;
-
+// Reprezinta jucatorul: nume, scor total si istoricul nivelelor finalizate.
 class Jucator {
 private:
-    char* nume;
-    int nivelCurent;
-    std::set<std::string> cuvinteGhiciteNivelCurent;
+    std::string nume;
+    int scorTotal;
+    std::vector<int> nivelurileFinalizate;
 
-    void alocaSiCopiazaNume(const char* numeNou);
+    static int numarJucatoriCreati;   // atribut static: cati Jucatori s-au creat in total
 
 public:
-
-    explicit Jucator(const char* numeJucator = "Necunoscut");
+    explicit Jucator(std::string nume);
     ~Jucator();
-    Jucator(const Jucator& altul);
-    Jucator& operator=(const Jucator& altul);
 
-    void seteazaNume(const char* numeNou);
-    std::string getNume() const;
-    int getNivelCurent() const;
-    const std::set<std::string>& getCuvinteGhicite() const;
+    void adaugaPuncte(int puncte);
+    void finalizeazaNivel(int idNivel);
+    std::string obtineRezumat() const;   // functie de nivel inalt (in loc de multi getteri)
 
-    bool salveazaProgres() const;
-    bool incarcaProgres();
+    const std::string& getNume() const;
+    int getScorTotal() const;
 
-    void completeazaNivelul();
-    void reseteazaJoc();
-    
-    int ghicesteCuvant(const std::string& cuvant, const Nivel& nivel);
+    static int getNumarJucatoriCreati();   // functie statica
 
-    bool aTerminatNivelul(const Nivel& n) const; 
-
-    friend std::ostream& operator<<(std::ostream& os, const Jucator& j);
+    friend std::ostream& operator<<(std::ostream& os, const Jucator& jucator);
 };
+
+#endif // PICNIC_CUVANT_JUCATOR_H

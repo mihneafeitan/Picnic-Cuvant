@@ -1,6 +1,4 @@
-Mihnea
-1
-HAN
-AN
-exit
-4
+# Picnic Cuvant nu foloseste std::cin - toata
+# interactiunea se face cu mouse-ul (click pe litere) si tastatura
+# (ENTER confirma cuvantul / trece la nivelul urmator, BACKSPACE sterge
+# ultima litera selectata, ESC goleste selectia curenta).

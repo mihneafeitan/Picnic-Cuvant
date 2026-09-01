@@ -1,15 +1,45 @@
-#include "include/Joc.h"
 #include <iostream>
-#include <stdexcept>
+#include <string>
 
-int main() {
+#include "CLI11.hpp"
+
+#include "Exceptii.h"
+#include "IncarcatorNivele.h"
+#include "InterfataJoc.h"
+#include "Joc.h"
+#include "Jucator.h"
+
+int main(int argc, char** argv) {
+    CLI::App app{"Picnic Cuvant - joc grafic de cuvinte in limba romana (10 nivele)"};
+
+    std::string numeJucator = "Jucator";
+    std::string folderDate = "data/nivele";
+    std::string caleFont = "assets/DejaVuSans.ttf";
+    int numarNivele = 2;   // la Tema 1 exista doar 2 nivele demo (tip CLASIC)
+
+    app.add_option("-n,--nume", numeJucator, "Numele jucatorului");
+    app.add_option("-d,--date", folderDate, "Folderul cu fisierele JSON ale nivelelor");
+    app.add_option("-f,--font", caleFont, "Calea catre fisierul de font (.ttf)");
+    app.add_option("-k,--nivele", numarNivele, "Numarul de nivele de incarcat (max 10)");
+
+    CLI11_PARSE(app, argc, argv);
+
     try {
-        Joc picnicCuvant("nivele.dat");
-        picnicCuvant.ruleaza();
+        Jucator jucator(numeJucator);
+        Joc joc(jucator);
 
-    } catch (const std::exception& e) {
-        std::cerr << "O eroare critica a oprit jocul: " << e.what() << std::endl;
+        auto nivele = IncarcatorNivele::incarcaToateNivelele(folderDate, numarNivele);
+        for (auto& nivel : nivele) {
+            joc.adaugaNivel(std::move(nivel));
+        }
+
+        InterfataJoc interfata(std::move(joc), caleFont);
+        interfata.ruleaza();
+
+    } catch (const PicnicCuvantExceptie& eroare) {
+        std::cerr << "Eroare: " << eroare.what() << "\n";
         return 1;
     }
+
     return 0;
 }
