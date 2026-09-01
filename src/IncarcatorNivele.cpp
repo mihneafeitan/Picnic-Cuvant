@@ -3,7 +3,7 @@
 #include <sstream>
 #include "Exceptii.h"
 #include "NivelClasic.h"
-#include "json.hpp"   // biblioteca externa nlohmann/json (folosita pentru stocare/citire)
+#include <json.hpp>   // biblioteca externa nlohmann/json (folosita pentru stocare/citire)
 
 namespace IncarcatorNivele {
 

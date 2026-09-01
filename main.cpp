@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "CLI11.hpp"
+#include <CLI11.hpp>
 
 #include "Litera.h"
 #include "Exceptii.h"
