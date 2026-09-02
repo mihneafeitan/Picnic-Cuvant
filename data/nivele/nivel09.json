@@ -1,0 +1,7 @@
+{
+  "id": 9,
+  "tip": "CRONOMETRAT",
+  "timpLimitaSecunde": 60,
+  "litere": ["G", "R", "A", "D", "I", "N", "A"],
+  "cuvinte": ["GRADINA", "RAND", "DAR", "GARD", "NARI", "RAI"]
+}

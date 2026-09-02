@@ -4,6 +4,7 @@
 #include "Exceptii.h"
 #include "NivelClasic.h"
 #include "NivelCronometrat.h"
+#include "NivelBonus.h"
 #include "NivelDificil.h"
 #include <json.hpp>   // biblioteca externa nlohmann/json (folosita pentru stocare/citire)
 
@@ -62,7 +63,11 @@ std::unique_ptr<Nivel> incarcaUnNivel(const std::string& caleFisier) {
             int greseliMaxime = continut.at("greseliMaxime").get<int>();
             return std::make_unique<NivelDificil>(id, litere, cuvinte, greseliMaxime);
         }
-        // tipul BONUS (NivelBonus) se adauga intr-un commit separat
+        if (tip == "BONUS") {
+            std::string literaBonus = continut.at("literaBonus").get<std::string>();
+            char litera = literaBonus.empty() ? ' ' : literaBonus[0];
+            return std::make_unique<NivelBonus>(id, litere, cuvinte, litera);
+        }
 
         throw ExceptieFisierDate(caleFisier, "tip de nivel necunoscut: " + tip);
     } catch (const nlohmann::json::out_of_range& eroare) {

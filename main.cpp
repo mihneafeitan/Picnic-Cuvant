@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     std::string numeJucator = "Jucator";
     std::string folderDate = "data/nivele";
     std::string caleFont = "assets/DejaVuSans.ttf";
-    int numarNivele = 7;   // la Tema 2 (inainte de NivelBonus) sunt 7 nivele  (nivel08 e BONUS)
+    int numarNivele = 10;
 
     app.add_option("-n,--nume", numeJucator, "Numele jucatorului");
     app.add_option("-d,--date", folderDate, "Folderul cu fisierele JSON ale nivelelor");

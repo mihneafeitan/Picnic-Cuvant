@@ -4,7 +4,9 @@
 #include <sstream>
 #include "Exceptii.h"
 #include "NivelCronometrat.h"
+#include "NivelBonus.h"
 #include "NivelDificil.h"
+
 
 namespace {
 constexpr float PI = 3.14159265358979323846f;
@@ -231,13 +233,20 @@ void InterfataJoc::deseneazaInfoSpecificaNivelului() {
         bara.setPosition({680.f, 585.f});
         bara.setFillColor(sf::Color(255, 140, 60));
         fereastra.draw(bara);
-    } else if (const auto* dificil = dynamic_cast<const NivelDificil*>(&curent)) {
+    }
+    else if (const auto* dificil = dynamic_cast<const NivelDificil*>(&curent)) {
         std::ostringstream text;
         text << "Greseli ramase: " << dificil->greseliRamase();
         auto eticheta = creazaText(font, text.str(), 16, sf::Color(255, 120, 120), {680.f, 560.f});
         fereastra.draw(eticheta);
     }
-    // ramura pentru NivelBonus se adauga intr-un commit separat
+     else if (const auto* bonus = dynamic_cast<const NivelBonus*>(&curent)) {
+        std::ostringstream text;
+        text << "Litera bonus (puncte duble): " << bonus->getLiteraBonus();
+        auto eticheta = creazaText(font, text.str(), 16, sf::Color(255, 215, 0), {680.f, 560.f});
+        fereastra.draw(eticheta);
+    }
+
 }
 
 void InterfataJoc::deseneazaEcranFinal() {
