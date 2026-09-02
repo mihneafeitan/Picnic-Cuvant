@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
+#include "Clasament.h"
 #include "Joc.h"
 
 // Strat de interfata grafica (SFML): deseneaza tabla de litere a nivelului
@@ -12,12 +13,14 @@
 //
 // Este complet separata de logica jocului (Joc, Nivel si derivatele lui nu
 // stiu nimic despre SFML) - InterfataJoc COMPUNE un obiect Joc (cerinta de
-// compunere din tema 1) si il foloseste doar prin interfata lui publica.
+// compunere din Tema 1) si il foloseste doar prin interfata lui publica.
 class InterfataJoc {
 private:
     sf::RenderWindow fereastra;
     sf::Font font;
     Joc joc;
+    Clasament clasament;
+    bool scorInregistratInClasament = false;
 
     std::vector<int> selectieCurenta;   // indicii literelor apasate pentru cuvantul curent
     std::string mesajStare;
@@ -38,7 +41,7 @@ private:
     void deseneazaLitere();
     void deseneazaSelectieCurenta();
     void deseneazaListaCuvinte();
-    void deseneazaInfoSpecificaNivelului();   // foloseste dynamic_cast pt info specifica derivatei
+    void deseneazaInfoSpecificaNivelului();   // foloseste dynamic_cast pt. info specifica derivatei
     void deseneazaEcranFinal();
 
     sf::Vector2f pozitieLitera(int index, int totalLitere) const;
@@ -49,10 +52,13 @@ private:
     void treciNivelDacaEComplet();
 
 public:
-    InterfataJoc(Joc jocInitial, const std::string& caleFont);
+    InterfataJoc(Joc jocInitial, const std::string& caleFont,
+                 const std::string& caleClasament = "clasament.json");
 
     void ruleaza();   // bucla principala a ferestrei
+
     const Joc& jocReferinta() const;   // acces read-only, pentru salvarea progresului dupa inchidere
+
     friend std::ostream& operator<<(std::ostream& os, const InterfataJoc& interfata);
 };
 

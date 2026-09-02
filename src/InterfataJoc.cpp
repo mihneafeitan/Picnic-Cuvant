@@ -3,10 +3,9 @@
 #include <cmath>
 #include <sstream>
 #include "Exceptii.h"
-#include "NivelCronometrat.h"
 #include "NivelBonus.h"
+#include "NivelCronometrat.h"
 #include "NivelDificil.h"
-
 
 namespace {
 constexpr float PI = 3.14159265358979323846f;
@@ -20,14 +19,17 @@ sf::Text creazaText(const sf::Font& font, const std::string& continut, unsigned 
 }
 }  // namespace
 
-InterfataJoc::InterfataJoc(Joc jocInitial, const std::string& caleFont)
+InterfataJoc::InterfataJoc(Joc jocInitial, const std::string& caleFont,
+                           const std::string& caleClasament)
     : fereastra(sf::VideoMode({900u, 700u}), "Picnic Cuvant"),
       font(),
       joc(std::move(jocInitial)),
+      clasament(caleClasament),
       culoareMesaj(sf::Color::White) {
     if (!font.openFromFile(caleFont)) {
         throw ExceptieFisierDate(caleFont, "fontul nu a putut fi incarcat");
     }
+    clasament.incarca();
     fereastra.setFramerateLimit(60);
     mesajStare = "Formeaza un cuvant apasand literele, apoi ENTER.";
 }
@@ -70,17 +72,14 @@ void InterfataJoc::proceseazaEvenimente() {
                         mesajStare = "Nivel nou! Formeaza un cuvant si apasa ENTER.";
                         culoareMesaj = sf::Color::White;
                     }
-                }
-                else {
+                } else {
                     confirmaSelectie();
                 }
-            }
-            else if (tasta->code == sf::Keyboard::Key::Backspace) {
+            } else if (tasta->code == sf::Keyboard::Key::Backspace) {
                 if (!selectieCurenta.empty()) {
                     selectieCurenta.pop_back();
                 }
-            }
-            else if (tasta->code == sf::Keyboard::Key::Escape) {
+            } else if (tasta->code == sf::Keyboard::Key::Escape) {
                 golesteSelectia();
             }
         }
@@ -137,7 +136,7 @@ void InterfataJoc::deseneazaAntet() {
     fereastra.draw(textNivel);
 
     auto textScor = creazaText(font, joc.getJucator().obtineRezumat(), 18, sf::Color(150, 220, 150),
-                                {330.f, 20.f});
+                                {680.f, 20.f});
     fereastra.draw(textScor);
 }
 
@@ -233,29 +232,50 @@ void InterfataJoc::deseneazaInfoSpecificaNivelului() {
         bara.setPosition({680.f, 585.f});
         bara.setFillColor(sf::Color(255, 140, 60));
         fereastra.draw(bara);
-    }
-    else if (const auto* dificil = dynamic_cast<const NivelDificil*>(&curent)) {
+    } else if (const auto* dificil = dynamic_cast<const NivelDificil*>(&curent)) {
         std::ostringstream text;
         text << "Greseli ramase: " << dificil->greseliRamase();
         auto eticheta = creazaText(font, text.str(), 16, sf::Color(255, 120, 120), {680.f, 560.f});
         fereastra.draw(eticheta);
-    }
-     else if (const auto* bonus = dynamic_cast<const NivelBonus*>(&curent)) {
+    } else if (const auto* bonus = dynamic_cast<const NivelBonus*>(&curent)) {
         std::ostringstream text;
         text << "Litera bonus (puncte duble): " << bonus->getLiteraBonus();
         auto eticheta = creazaText(font, text.str(), 16, sf::Color(255, 215, 0), {680.f, 560.f});
         fereastra.draw(eticheta);
     }
-
 }
 
 void InterfataJoc::deseneazaEcranFinal() {
+    if (!scorInregistratInClasament) {
+        bool aIntratInTop =
+            clasament.adaugaScor(joc.getJucator().getNume(), joc.getJucator().getScorTotal());
+        clasament.salveaza();
+        std::cout << clasament;
+        if (aIntratInTop) {
+            std::cout << "Felicitari, ai intrat in clasament!\n";
+        }
+        scorInregistratInClasament = true;
+    }
+
     auto text = creazaText(font, "Ai terminat toate nivelele!", 28, sf::Color(255, 215, 90),
-                            {180.f, 300.f});
+                            {180.f, 260.f});
     fereastra.draw(text);
     auto rezumat = creazaText(font, joc.getJucator().obtineRezumat(), 22, sf::Color::White,
-                               {180.f, 350.f});
+                               {180.f, 300.f});
     fereastra.draw(rezumat);
+
+    auto titluClasament = creazaText(font, "Clasament (top scoruri):", 20, sf::Color(255, 210, 90),
+                                      {180.f, 350.f});
+    fereastra.draw(titluClasament);
+
+    for (std::size_t i = 0; i < clasament.numarIntrari(); ++i) {
+        const auto& intrare = clasament.intrareLa(i);
+        std::ostringstream linie;
+        linie << (i + 1) << ". " << intrare.first << " - " << intrare.second << " puncte";
+        auto textLinie = creazaText(font, linie.str(), 18, sf::Color(200, 210, 230),
+                                     {180.f, 385.f + i * 26.f});
+        fereastra.draw(textLinie);
+    }
 }
 
 sf::Vector2f InterfataJoc::pozitieLitera(int index, int totalLitere) const {

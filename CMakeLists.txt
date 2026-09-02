@@ -71,6 +71,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/InterfataJoc.cpp
 	src/NivelBonus.cpp
 	src/GestionarSalvari.cpp
+	src/Clasament.cpp
 )
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
