@@ -136,7 +136,7 @@ void InterfataJoc::deseneazaAntet() {
     fereastra.draw(textNivel);
 
     auto textScor = creazaText(font, joc.getJucator().obtineRezumat(), 18, sf::Color(150, 220, 150),
-                                {680.f, 20.f});
+                                {330.f, 20.f});
     fereastra.draw(textScor);
 }
 
@@ -267,6 +267,12 @@ void InterfataJoc::deseneazaEcranFinal() {
     auto titluClasament = creazaText(font, "Clasament (top scoruri):", 20, sf::Color(255, 210, 90),
                                       {180.f, 350.f});
     fereastra.draw(titluClasament);
+
+    if (clasament.esteGol()) {
+        auto mesajGol = creazaText(font, "(esti primul care a jucat pana la capat!)", 16,
+                                    sf::Color(150, 160, 180), {180.f, 385.f});
+        fereastra.draw(mesajGol);
+    }
 
     for (std::size_t i = 0; i < clasament.numarIntrari(); ++i) {
         const auto& intrare = clasament.intrareLa(i);
