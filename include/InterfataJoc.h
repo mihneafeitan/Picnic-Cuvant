@@ -52,6 +52,7 @@ public:
     InterfataJoc(Joc jocInitial, const std::string& caleFont);
 
     void ruleaza();   // bucla principala a ferestrei
+    const Joc& jocReferinta() const;   // acces read-only, pentru salvarea progresului dupa inchidere
     friend std::ostream& operator<<(std::ostream& os, const InterfataJoc& interfata);
 };
 

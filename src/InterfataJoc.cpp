@@ -320,6 +320,8 @@ void InterfataJoc::treciNivelDacaEComplet() {
     }
 }
 
+const Joc& InterfataJoc::jocReferinta() const { return joc; }
+
 std::ostream& operator<<(std::ostream& os, const InterfataJoc& interfata) {
     os << "InterfataJoc[fereastra " << interfata.fereastra.getSize().x << "x"
        << interfata.fereastra.getSize().y << ", " << interfata.joc << "]";

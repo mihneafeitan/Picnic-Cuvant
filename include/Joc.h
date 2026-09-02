@@ -32,6 +32,7 @@ public:
     // apeleaza functii virtuale prin pointerul de baza catre nivelul curent
     int joacaCuvant(const std::vector<int>& indiciSelectati);
     void treciLaNivelUrmator();
+    void restaureazaProgres(int indexNivelTinta, int scorSalvat);   // pentru reluarea unei salvari
     bool ramanNivele() const;
     void actualizeazaNivelCurent(float deltaSecunde);   // deleaga la Nivel::actualizeaza
 

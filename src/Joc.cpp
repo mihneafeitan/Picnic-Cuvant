@@ -70,6 +70,13 @@ int Joc::getNumarNiveleTotale() const { return static_cast<int>(nivele.size()); 
 
 int Joc::getIndexNivelCurent() const { return indexNivelCurent; }
 
+void Joc::restaureazaProgres(int indexNivelTinta, int scorSalvat) {
+    while (indexNivelCurent < indexNivelTinta && ramanNivele()) {
+        treciLaNivelUrmator();
+    }
+    jucator.adaugaPuncte(scorSalvat);
+}
+
 const Nivel& Joc::nivelCurent() const {
     if (!ramanNivele()) {
         throw ExceptieNivelInexistent(indexNivelCurent, static_cast<int>(nivele.size()));
